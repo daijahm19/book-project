@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Book Detail - One Book</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      background-color: #0d0d0d;
+      color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: #1a1a1a;
+      border: 2px solid #1DB954;
+      padding: 40px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 700px;
+      box-shadow: 0 0 15px rgba(29, 185, 84, 0.4);
+      text-align: center;
+    }
+
+    h1 {
+      color: #1DB954;
+      margin-bottom: 25px;
+    }
+
+    img {
+      max-width: 200px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border: 2px solid #1DB954;
+    }
+
+    h2 {
+      color: #1DB954;
+    }
+
+    .info {
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    .info p {
+      margin: 6px 0;
+      color: #e0e0e0;
+    }
+
+    a {
+      color: #1DB954;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Book Information</h1>
+    <div id="book">Loading...</div>
+  </div>
+
+  <script>
+    $.getJSON("google-books-book.json", function(data) {
+      const info = data.volumeInfo;
+      const title = info.title || "No title";
+      const authors = info.authors ? info.authors.join(", ") : "Unknown";
+      const description = info.description || "No description available.";
+      const publisher = info.publisher || "Unknown Publisher";
+      const publishedDate = info.publishedDate || "Unknown";
+      const image = info.imageLinks?.thumbnail || "";
+      const previewLink = info.previewLink || "#";
+
+      const html = `
+        ${image ? `<img src="${image}" alt="Book Cover">` : ''}
+        <h2>${title}</h2>
+        <div class="info">
+          <p><strong>Authors:</strong> ${authors}</p>
+          <p><strong>Publisher:</strong> ${publisher}</p>
+          <p><strong>Published Date:</strong> ${publishedDate}</p>
+          <p><strong>Description:</strong> ${description}</p>
+          <p><a href="${previewLink}" target="_blank">Preview this book</a></p>
+        </div>
+      `;
+
+      $('#book').html(html);
+    });
+  </script>
+</body>
+</html>
