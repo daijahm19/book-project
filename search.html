@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Book Search - My Project</title>
+  <meta charset="UTF-8">
+  <title>Book Search</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
       background-color: #0d0d0d;
       color: white;
-      padding: 30px;
+      font-family: Arial, sans-serif;
+      padding: 20px;
     }
 
     h1 {
@@ -18,100 +18,80 @@
       color: black;
       padding: 15px;
       border-radius: 10px;
-      font-size: 28px;
       margin-bottom: 30px;
-      box-shadow: 0 0 10px #1DB954;
-    }
-
-    .book-list {
-      display: flex;
-      flex-direction: column;
-      gap: 25px;
     }
 
     .book {
-      background: #1a1a1a;
-      border: 2px solid #1DB954;
-      border-radius: 15px;
+      background-color: #1a1a1a;
+      border: 1px solid #1DB954;
       padding: 20px;
-      display: flex;
-      gap: 20px;
-      box-shadow: 0 0 12px rgba(29, 185, 84, 0.3);
-      align-items: flex-start;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      overflow: hidden;
     }
 
     .book img {
-      width: 120px;
-      height: auto;
-      border-radius: 8px;
-      object-fit: cover;
+      float: left;
+      margin-right: 15px;
+      width: 100px;
+      border-radius: 6px;
+      border: 2px solid #1DB954;
     }
 
-    .info {
-      max-width: 600px;
-    }
-
-    .info h2 {
-      font-size: 22px;
+    .book h2 {
       color: #1DB954;
-      margin-bottom: 8px;
+      font-size: 20px;
+      margin-top: 0;
     }
 
-    .info p {
-      margin: 8px 0;
-      line-height: 1.5;
+    .book p {
+      margin: 6px 0;
       color: #e0e0e0;
     }
 
-    .info a {
-      display: inline-block;
-      margin-top: 10px;
-      background-color: #1DB954;
-      color: black;
-      padding: 6px 14px;
-      text-decoration: none;
-      border-radius: 6px;
-      transition: background-color 0.2s ease;
+    a {
+      color: #1DB954;
     }
 
-    .info a:hover {
-      background-color: #14833b;
-      color: white;
+    .clear {
+      clear: both;
     }
   </style>
 </head>
 <body>
   <h1>Book Search</h1>
-  <div class="book-list" id="bookList">Loading...</div>
+  <div id="bookList">Loading books...</div>
 
   <script>
     $(document).ready(function () {
-      $.getJSON('google-books-search.json', function (data) {
-        const books = data.items;
-        let html = '';
+      $.getJSON("google-books-search.json", function (data) {
+        var books = data.items;
+        var html = "";
 
-        books.forEach(book => {
-          const info = book.volumeInfo;
-          const title = info.title || 'No title';
-          const authors = info.authors ? info.authors.join(', ') : 'Unknown';
-          const description = info.description || 'No description available';
-          const thumbnail = info.imageLinks?.thumbnail || '';
-          const link = info.infoLink || '#';
+        for (var i = 0; i < books.length; i++) {
+          var info = books[i].volumeInfo;
+          var title = info.title;
+          var authors = info.authors;
+          var description = info.description;
+          var link = info.infoLink;
+          var image = "";
 
-          html += `
-            <div class="book">
-              ${thumbnail ? `<img src="${thumbnail}" alt="Book Cover">` : ''}
-              <div class="info">
-                <h2>${title}</h2>
-                <p><strong>Authors:</strong> ${authors}</p>
-                <p>${description}</p>
-                <a href="${link}" target="_blank">Read More</a>
-              </div>
-            </div>
-          `;
-        });
+          if (info.imageLinks) {
+            image = info.imageLinks.thumbnail;
+          }
 
-        $('#bookList').html(html);
+          html += "<div class='book'>";
+          if (image !== "") {
+            html += "<img src='" + image + "' alt='Book Cover'>";
+          }
+          html += "<h2>" + title + "</h2>";
+          html += "<p><strong>Authors:</strong> " + authors + "</p>";
+          html += "<p>" + description + "</p>";
+          html += "<p><a href='" + link + "' target='_blank'>More Info</a></p>";
+          html += "<div class='clear'></div></div>";
+        }
+
+        $("#bookList").html(html);
       });
     });
   </script>

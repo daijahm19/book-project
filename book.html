@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Book Detail - One Book</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
@@ -17,83 +17,72 @@
       min-height: 100vh;
     }
 
-    .container {
-      background: #1a1a1a;
-      border: 2px solid #1DB954;
-      padding: 40px;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 700px;
-      box-shadow: 0 0 15px rgba(29, 185, 84, 0.4);
+    .book-box {
+      background-color: #1a1a1a;
+      border: 1px solid #1DB954;
+      padding: 25px;
+      border-radius: 10px;
+      max-width: 500px;
       text-align: center;
-    }
-
-    h1 {
-      color: #1DB954;
-      margin-bottom: 25px;
-    }
-
-    img {
-      max-width: 200px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      border: 2px solid #1DB954;
     }
 
     h2 {
       color: #1DB954;
+      margin-top: 15px;
     }
 
-    .info {
-      text-align: left;
-      margin-top: 20px;
-    }
-
-    .info p {
+    p {
       margin: 6px 0;
       color: #e0e0e0;
     }
 
-    a {
-      color: #1DB954;
-      text-decoration: none;
+    img {
+      width: 160px;
+      border-radius: 8px;
+      border: 2px solid #1DB954;
     }
 
-    a:hover {
-      text-decoration: underline;
+    a {
+      color: #1DB954;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Book Information</h1>
-    <div id="book">Loading...</div>
+  <div class="book-box" id="book">
+    Loading book info...
   </div>
 
   <script>
-    $.getJSON("google-books-book.json", function(data) {
-      const info = data.volumeInfo;
-      const title = info.title || "No title";
-      const authors = info.authors ? info.authors.join(", ") : "Unknown";
-      const description = info.description || "No description available.";
-      const publisher = info.publisher || "Unknown Publisher";
-      const publishedDate = info.publishedDate || "Unknown";
-      const image = info.imageLinks?.thumbnail || "";
-      const previewLink = info.previewLink || "#";
+    $(document).ready(function () {
+      $.getJSON("google-books-book.json", function (data) {
+        var info = data.volumeInfo;
+        var title = info.title;
+        var authors = info.authors;
+        var publisher = info.publisher;
+        var date = info.publishedDate;
+        var description = info.description;
+        var image = "";
+        var link = info.previewLink;
 
-      const html = `
-        ${image ? `<img src="${image}" alt="Book Cover">` : ''}
-        <h2>${title}</h2>
-        <div class="info">
-          <p><strong>Authors:</strong> ${authors}</p>
-          <p><strong>Publisher:</strong> ${publisher}</p>
-          <p><strong>Published Date:</strong> ${publishedDate}</p>
-          <p><strong>Description:</strong> ${description}</p>
-          <p><a href="${previewLink}" target="_blank">Preview this book</a></p>
-        </div>
-      `;
+        if (info.imageLinks) {
+          image = info.imageLinks.thumbnail;
+        }
 
-      $('#book').html(html);
+        var html = "";
+
+        if (image !== "") {
+          html += "<img src='" + image + "' alt='Book Cover'><br><br>";
+        }
+
+        html += "<h2>" + title + "</h2>";
+        html += "<p><strong>Authors:</strong> " + authors + "</p>";
+        html += "<p><strong>Publisher:</strong> " + publisher + "</p>";
+        html += "<p><strong>Published:</strong> " + date + "</p>";
+        html += "<p>" + description + "</p>";
+        html += "<p><a href='" + link + "' target='_blank'>Preview this book</a></p>";
+
+        $("#book").html(html);
+      });
     });
   </script>
 </body>
